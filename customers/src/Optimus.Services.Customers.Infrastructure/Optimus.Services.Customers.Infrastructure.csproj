@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Optimus.Services.Customers.Application\Optimus.Services.Customers.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Convey" Version="1.0.541" />
+        <PackageReference Include="Convey.HTTP" Version="1.0.541" />
+        <PackageReference Include="Convey.Logging" Version="1.0.541" />
+        <PackageReference Include="Convey.Logging.CQRS" Version="1.0.541" />
+        <PackageReference Include="Convey.MessageBrokers.CQRS" Version="1.0.541" />
+        <PackageReference Include="Convey.MessageBrokers.Outbox" Version="1.0.541" />
+        <PackageReference Include="Convey.MessageBrokers.RabbitMQ" Version="1.0.541" />
+        <PackageReference Include="Convey.Metrics.AppMetrics" Version="1.0.541" />
+        <PackageReference Include="Convey.Persistence.Redis" Version="1.0.541" />
+        <PackageReference Include="Convey.Security" Version="1.0.541" />
+        <PackageReference Include="Convey.WebApi" Version="1.0.541" />
+        <PackageReference Include="Convey.WebApi.CQRS" Version="1.0.541" />
+        <PackageReference Include="Convey.WebApi.Security" Version="1.0.541" />
+        <PackageReference Include="Convey.MessageBrokers.Outbox.EntityFramework" Version="1.0.67" />
+        <PackageReference Include="Humanizer.Core" Version="2.14.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5" />
+        <PackageReference Include="Minio" Version="4.0.5" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.5" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.2.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.2.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.2.3" />
+    </ItemGroup>
+
+</Project>

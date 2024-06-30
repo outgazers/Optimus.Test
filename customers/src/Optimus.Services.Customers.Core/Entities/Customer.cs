@@ -1,0 +1,131 @@
+using Optimus.Services.Customers.Core.Events;
+using Optimus.Services.Customers.Core.Exceptions;
+using Optimus.Services.Customers.Core.ValueObjects;
+
+namespace Optimus.Services.Customers.Core.Entities;
+
+public class Customer : AggregateRoot
+{
+    public string Email { get; private set; }
+    public string Username { get; set; }
+    public FullName? FullName { get; private set; }
+    public Address? Address { get; private set; }
+    public string? NationalCode { get; private set; }
+    public DateTime? BirthDate { get; private set; }
+    public bool IsVip { get; private set; }
+    public State State { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+    public DateTime UpdatedAt { get; private set; }
+
+    public Customer()
+    {
+    }
+
+    public Customer(Guid id, string email, DateTime createdAt, DateTime updatedAt, string username) : this(id, email,
+        createdAt, updatedAt, null, null, false, State.Incomplete, username, null, null)
+    {
+    }
+
+    public Customer(Guid id, string email, DateTime createdAt, DateTime updatedAt, string fullName,
+        string address,
+        bool isVip, State state, string username, DateTime? birthDate = null, string? nationalCode = null)
+    {
+        Id = id;
+        Email = email;
+        Username = username;
+        CreatedAt = createdAt;
+        UpdatedAt = updatedAt;
+        FullName = fullName;
+        Address = address;
+        BirthDate = birthDate;
+        NationalCode = nationalCode;
+        IsVip = isVip;
+        State = state;
+    }
+
+    public void CompleteRegistration(string fullName, string address, DateTime birthDate, string nationalCode)
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+        {
+            throw new InvalidCustomerFullNameException(Id, fullName);
+        }
+
+        if (string.IsNullOrWhiteSpace(address))
+        {
+            throw new InvalidCustomerAddressException(Id, address);
+        }
+
+        if (birthDate.AddYears(18) > DateTime.Now)
+        {
+            throw new InvalidCustomerYearsPolicyException(Id, birthDate);
+        }
+
+        if (State != State.Incomplete && State != State.AwaitForValidate)
+        {
+            throw new CannotChangeCustomerStateException(Id, State);
+        }
+
+        FullName = fullName;
+        Address = address;
+        BirthDate = birthDate;
+        NationalCode = nationalCode;
+        State = State.Valid;
+        AddEvent(new CustomerRegistrationCompleted(this));
+    }
+
+    public void CompleteRegistrationFromUser(string fullName, string address, DateTime birthDate, string nationalCode)
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+        {
+            throw new InvalidCustomerFullNameException(Id, fullName);
+        }
+
+        if (string.IsNullOrWhiteSpace(address))
+        {
+            throw new InvalidCustomerAddressException(Id, address);
+        }
+
+        if (birthDate.AddYears(18) > DateTime.Now)
+        {
+            throw new InvalidCustomerYearsPolicyException(Id, birthDate);
+        }
+
+        if (State != State.Incomplete)
+        {
+            throw new CannotChangeCustomerStateException(Id, State);
+        }
+
+        FullName = fullName;
+        Address = address;
+        BirthDate = birthDate;
+        NationalCode = nationalCode;
+        State = State.AwaitForValidate;
+        AddEvent(new CustomerRegistrationCompletedFromUser(this));
+    }
+
+    public void SetValid() => SetState(State.Valid);
+
+    public void SetIncomplete() => SetState(State.Incomplete);
+
+    public void Lock() => SetState(State.Locked);
+
+    public void MarkAsSuspicious() => SetState(State.Suspicious);
+
+    private void SetState(State state)
+    {
+        var previousState = State;
+        State = state;
+        AddEvent(new CustomerStateChanged(this, previousState));
+    }
+
+    public void SetVip()
+    {
+        if (IsVip)
+        {
+            return;
+        }
+
+        IsVip = true;
+        AddEvent(new CustomerBecameVip(this));
+    }
+}

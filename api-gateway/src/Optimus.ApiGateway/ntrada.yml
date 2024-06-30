@@ -1,0 +1,202 @@
+auth:
+  enabled: true
+  global: false
+  claims:
+    role: http://schemas.microsoft.com/ws/2008/06/identity/claims/role
+
+http:
+  retries: 2
+  interval: 2.0
+  exponential: true
+
+useForwardedHeaders: true
+passQueryString: true
+forwardRequestHeaders: true
+forwardResponseHeaders: true
+generateRequestId: true
+generateTraceId: true
+useLocalUrl: true
+loadBalancer:
+  enabled: false
+  url: localhost:9999
+
+extensions:
+  customErrors:
+    includeExceptionMessage: true
+
+  cors:
+    allowCredentials: true
+    allowedOrigins:
+      - '*'
+    allowedMethods:
+      - post
+      - put
+      - delete
+    allowedHeaders:
+      - '*'
+    exposedHeaders:
+      - Request-ID
+      - Resource-ID
+      - Trace-ID
+      - Total-Count
+
+  jwt:
+    issuerSigningKey: nae2ixohdorooHeHieg2Yezaelei7wei7ET8Oogi8ahng3gahghahceZiedieZooshiew8tahk5ohR2b
+    validIssuer: optimus
+    validateAudience: false
+    validateIssuer: true
+    validateLifetime: true
+
+  swagger:
+    name: Optimus
+    reDocEnabled: false
+    title: Optimus API
+    version: v1
+    routePrefix: docs
+    includeSecurity: false
+
+  tracing:
+    serviceName: api-gateway
+    udpHost: localhost
+    udpPort: 6831
+    maxPacketSize: 0
+    sampler: const
+    useEmptyTracer: false
+
+modules:
+  home:
+    routes:
+      - upstream: /
+        method: GET
+        use: return_value
+        returnValue: Welcome to Optimus API!
+
+  customers:
+    path: customers
+    routes:
+      - upstream: /complete-profile
+        method: POST
+        use: downstream
+        downstream: customers-service/customers/complete-profile
+        auth: true
+        responseHeaders:
+          content-type: application/json
+        claims:
+          role: user
+            
+      - upstream: /
+        method: GET
+        use: downstream
+        downstream: customers-service/customers
+        auth: true
+        responseHeaders:
+          content-type: application/json
+        claims:
+          role: admin
+    
+      - upstream: /{customerId}
+        method: GET
+        use: downstream
+        downstream: customers-service/customers/{customerId}
+        auth: true
+        claims:
+          role: admin
+          
+      - upstream: /me
+        method: GET
+        use: downstream
+        downstream: customers-service/customers/me
+        auth: true
+        claims:
+          role: user
+    
+      - upstream: /{customerId}/state/{state}
+        method: PUT
+        use: downstream
+        downstream: customers-service/customers/{customerId}/state/{state}
+        bind:
+          - customerId:{customerId}
+          - state:{state}
+        auth: true
+        claims:
+          role: admin
+          
+      - upstream: /complete-profile-from-admin
+        method: POST
+        use: downstream
+        downstream: customers-service/customers/complete-profile-from-admin
+        auth: true
+        responseHeaders:
+          content-type: application/json
+        claims:
+          role: admin
+    
+    services:
+      customers-service:
+        localUrl: localhost:5064
+        url: customers-service
+
+
+  identity:
+    path: identity
+    routes:
+      - upstream: /send-verification-code
+        method: POST
+        use: downstream
+        downstream: identity-service/send-verification-code
+        auth: true
+        claims:
+          role: user
+          
+      - upstream: /access-tokens/revoke
+        method: POST
+        use: downstream
+        downstream: identity-service/access-tokens/revoke
+        auth: true
+        claims:
+          role: user
+          
+      - upstream: /refresh-tokens/use
+        method: POST
+        use: downstream
+        downstream: identity-service/refresh-tokens/use
+        auth: true
+        claims:
+          role: user
+          
+      - upstream: /update-password
+        method: POST
+        use: downstream
+        downstream: identity-service/update-password
+        auth: true
+        claims:
+          role: user
+    
+      - upstream: /sign-up
+        method: POST
+        use: downstream
+        downstream: identity-service/sign-up
+        auth: false
+        responseHeaders:
+          content-type: application/json
+    
+      - upstream: /sign-in
+        method: POST
+        use: downstream
+        downstream: identity-service/sign-in
+        auth: false
+        responseHeaders:
+          content-type: application/json
+          
+      - upstream: /verify-email
+        method: POST
+        use: downstream
+        downstream: identity-service/verify-email
+        auth: false
+        responseHeaders:
+          content-type: application/json
+    
+    services:
+      identity-service:
+        localUrl: localhost:5271
+        url: identity-service

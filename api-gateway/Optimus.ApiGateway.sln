@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AA8866DE-6BCC-4995-A6CC-22119B383002}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optimus.ApiGateway", "src\Optimus.ApiGateway\Optimus.ApiGateway.csproj", "{DDA079D9-04EB-4A67-956A-71ACEBECB275}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DDA079D9-04EB-4A67-956A-71ACEBECB275} = {AA8866DE-6BCC-4995-A6CC-22119B383002}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DDA079D9-04EB-4A67-956A-71ACEBECB275}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDA079D9-04EB-4A67-956A-71ACEBECB275}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDA079D9-04EB-4A67-956A-71ACEBECB275}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDA079D9-04EB-4A67-956A-71ACEBECB275}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
