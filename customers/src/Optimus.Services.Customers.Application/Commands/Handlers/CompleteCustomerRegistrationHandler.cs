@@ -35,7 +35,7 @@ public class CompleteCustomerRegistrationHandler : ICommandHandler<CompleteCusto
             throw new CustomerAlreadyRegisteredException(command.CustomerId);
         }
 
-        customer.CompleteRegistration(command.FullName, command.Address, command.BirthDate, command.NationalCode);
+        //customer.CompleteRegistration(command.FullName, command.Address, command.BirthDate, command.NationalCode);
         await _customerRepository.UpdateAsync(customer);
 
         var events = _eventMapper.MapAll(customer.Events);

@@ -22,8 +22,15 @@ namespace Optimus.Services.Customers.Infrastructure.Migrations
                     Username = table.Column<string>(type: "text", nullable: false),
                     FullName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     Address = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    NationalCode = table.Column<string>(type: "text", nullable: true),
-                    BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CompanyName = table.Column<string>(type: "text", nullable: false),
+                    MC = table.Column<string>(type: "text", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    NetTerms = table.Column<string>(type: "text", nullable: false),
+                    TMS = table.Column<string>(type: "text", nullable: false),
+                    IsAssetBase = table.Column<bool>(type: "boolean", nullable: true),
+                    ModsOfTransportation = table.Column<int[]>(type: "integer[]", nullable: true),
+                    Industry = table.Column<string>(type: "text", nullable: false),
+                    YearsInBusiness = table.Column<int>(type: "integer", nullable: true),
                     IsVip = table.Column<bool>(type: "boolean", nullable: false),
                     State = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -77,6 +84,13 @@ namespace Optimus.Services.Customers.Infrastructure.Migrations
                 schema: "customers",
                 table: "Customers",
                 column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_Username",
+                schema: "customers",
+                table: "Customers",
+                column: "Username",
                 unique: true);
         }
 

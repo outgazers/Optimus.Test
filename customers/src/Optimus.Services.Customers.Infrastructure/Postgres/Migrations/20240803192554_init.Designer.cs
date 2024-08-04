@@ -12,7 +12,7 @@ using Optimus.Services.Customers.Infrastructure.Postgres;
 namespace Optimus.Services.Customers.Infrastructure.Migrations
 {
     [DbContext(typeof(CustomersDbContext))]
-    [Migration("20240628182313_init")]
+    [Migration("20240803192554_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,8 +93,9 @@ namespace Optimus.Services.Customers.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -108,14 +109,37 @@ namespace Optimus.Services.Customers.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<string>("Industry")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("IsAssetBase")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsVip")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("NationalCode")
+                    b.Property<string>("MC")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int[]>("ModsOfTransportation")
+                        .HasColumnType("integer[]");
+
+                    b.Property<string>("NetTerms")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("State")
                         .HasColumnType("integer");
+
+                    b.Property<string>("TMS")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -128,9 +152,15 @@ namespace Optimus.Services.Customers.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("integer");
 
+                    b.Property<int?>("YearsInBusiness")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
                         .IsUnique();
 
                     b.ToTable("Customers", "customers");

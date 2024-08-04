@@ -31,8 +31,6 @@ public class GetCustomerHandler : IQueryHandler<GetCustomer, CustomerDetailsDto>
             UpdatedAt = customer.UpdatedAt,
             FullName = customer.FullName,
             IsVip = customer.IsVip,
-            BirthDate = customer.BirthDate,
-            NationalCode = customer.NationalCode
         };
     }
 }

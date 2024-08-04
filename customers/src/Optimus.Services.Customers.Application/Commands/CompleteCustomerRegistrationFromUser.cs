@@ -1,6 +1,5 @@
 using Convey.CQRS.Commands;
-using Optimus.Services.Customers.Core.ValueObjects;
-using Microsoft.AspNetCore.Http;
+using Optimus.Services.Customers.Core.Entities;
 
 namespace Optimus.Services.Customers.Application.Commands;
 
@@ -9,7 +8,14 @@ public class CompleteCustomerRegistrationFromUser : ICommand
 {
     public Guid CustomerId { get; set; }
     public string FullName { get; set; }
-    public DateTime BirthDate { get; set; }
-    public string NationalCode { get; set; }
-    public string Address { get; set; }
+    public string CompanyName { get; set; }
+    public string LocationStateAndCity { get; set; }
+    public string MC { get; set; }
+    public string PhoneNumber { get; set; } 
+    public string NetTerms { get; set; } 
+    public string TMS { get; set; } 
+    public bool IsAssetBase { get; set; } 
+    public List<ModsOfTransportation> ModsOfTransportation { get; set; }
+    public string Industry { get; set; }
+    public int YearsInBusiness { get; set; }
 }

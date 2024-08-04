@@ -10,8 +10,15 @@ public class Customer : AggregateRoot
     public string Username { get; set; }
     public FullName? FullName { get; private set; }
     public Address? Address { get; private set; }
-    public string? NationalCode { get; private set; }
-    public DateTime? BirthDate { get; private set; }
+    public string? CompanyName { get; set; }
+    public string? MC { get; set; }
+    public string? PhoneNumber { get; set; } 
+    public string? NetTerms { get; set; } 
+    public string? TMS { get; set; } 
+    public bool? IsAssetBase { get; set; } 
+    public List<ModsOfTransportation>? ModsOfTransportation { get; set; }
+    public string? Industry { get; set; }
+    public int? YearsInBusiness { get; set; }
     public bool IsVip { get; private set; }
     public State State { get; private set; }
     public DateTime CreatedAt { get; private set; }
@@ -22,13 +29,15 @@ public class Customer : AggregateRoot
     }
 
     public Customer(Guid id, string email, DateTime createdAt, DateTime updatedAt, string username) : this(id, email,
-        createdAt, updatedAt, null, null, false, State.Incomplete, username, null, null)
+        createdAt, updatedAt, null, null, false, State.Incomplete, username, null, null, null, null, null, false, null, null, 0)
     {
     }
 
     public Customer(Guid id, string email, DateTime createdAt, DateTime updatedAt, string fullName,
         string address,
-        bool isVip, State state, string username, DateTime? birthDate = null, string? nationalCode = null)
+        bool isVip, State state, string username, string companyName, string? mc, string? phoneNumber, string? tMS,
+        string? netTerms, bool isAssetBase, List<ModsOfTransportation> modsOfTransportation, string? industry,
+        int yearsInBusiness)
     {
         Id = id;
         Email = email;
@@ -37,13 +46,22 @@ public class Customer : AggregateRoot
         UpdatedAt = updatedAt;
         FullName = fullName;
         Address = address;
-        BirthDate = birthDate;
-        NationalCode = nationalCode;
+        CompanyName = companyName;
+        MC = mc;
+        PhoneNumber = phoneNumber;
+        NetTerms = netTerms;
+        TMS = tMS;
+        IsAssetBase = isAssetBase;
+        ModsOfTransportation = modsOfTransportation;
+        Industry = industry;
+        YearsInBusiness = yearsInBusiness;
         IsVip = isVip;
         State = state;
     }
 
-    public void CompleteRegistration(string fullName, string address, DateTime birthDate, string nationalCode)
+    public void CompleteRegistration(string fullName, string address, string nationalCode,
+        string companyName, string mc, string phoneNumber, string netTerms, string tMS, bool isAssetBase,
+        List<ModsOfTransportation> modsOfTransportation, string industry, int yearsInBusiness)
     {
         if (string.IsNullOrWhiteSpace(fullName))
         {
@@ -53,11 +71,6 @@ public class Customer : AggregateRoot
         if (string.IsNullOrWhiteSpace(address))
         {
             throw new InvalidCustomerAddressException(Id, address);
-        }
-
-        if (birthDate.AddYears(18) > DateTime.Now)
-        {
-            throw new InvalidCustomerYearsPolicyException(Id, birthDate);
         }
 
         if (State != State.Incomplete && State != State.AwaitForValidate)
@@ -67,13 +80,22 @@ public class Customer : AggregateRoot
 
         FullName = fullName;
         Address = address;
-        BirthDate = birthDate;
-        NationalCode = nationalCode;
+        CompanyName = companyName;
+        MC = mc;
+        PhoneNumber = phoneNumber;
+        NetTerms = netTerms;
+        TMS = tMS;
+        IsAssetBase = isAssetBase;
+        ModsOfTransportation = modsOfTransportation;
+        Industry = industry;
+        YearsInBusiness = yearsInBusiness;
         State = State.Valid;
         AddEvent(new CustomerRegistrationCompleted(this));
     }
 
-    public void CompleteRegistrationFromUser(string fullName, string address, DateTime birthDate, string nationalCode)
+    public void CompleteRegistrationFromUser(string fullName, string address,
+        string companyName, string mc, string phoneNumber, string netTerms, string tMS, bool isAssetBase,
+        List<ModsOfTransportation> modsOfTransportation, string industry, int yearsInBusiness)
     {
         if (string.IsNullOrWhiteSpace(fullName))
         {
@@ -85,11 +107,6 @@ public class Customer : AggregateRoot
             throw new InvalidCustomerAddressException(Id, address);
         }
 
-        if (birthDate.AddYears(18) > DateTime.Now)
-        {
-            throw new InvalidCustomerYearsPolicyException(Id, birthDate);
-        }
-
         if (State != State.Incomplete)
         {
             throw new CannotChangeCustomerStateException(Id, State);
@@ -97,8 +114,16 @@ public class Customer : AggregateRoot
 
         FullName = fullName;
         Address = address;
-        BirthDate = birthDate;
-        NationalCode = nationalCode;
+        CompanyName = companyName;
+        MC = mc;
+        PhoneNumber = phoneNumber;
+        NetTerms = netTerms;
+        TMS = tMS;
+        IsAssetBase = isAssetBase;
+        ModsOfTransportation = modsOfTransportation;
+        Industry = industry;
+        YearsInBusiness = yearsInBusiness;
+        State = State.Valid;
         State = State.AwaitForValidate;
         AddEvent(new CustomerRegistrationCompletedFromUser(this));
     }

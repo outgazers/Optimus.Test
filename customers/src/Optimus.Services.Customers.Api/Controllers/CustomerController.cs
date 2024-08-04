@@ -4,6 +4,8 @@ using Optimus.Services.Customers.Application.Commands;
 using Optimus.Services.Customers.Application.DTO;
 using Optimus.Services.Customers.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
+using Optimus.Services.Customers.Application.Events;
+using Optimus.Services.Customers.Application.Services;
 using Optimus.Services.Customers.Core.Entities;
 using SharedAbstractions.Queries;
 using Swashbuckle.AspNetCore.Annotations;
@@ -15,11 +17,26 @@ public class CustomerController : ControllerBase
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
+    private readonly IMessageBroker _messageBroker;
 
-    public CustomerController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
+    public CustomerController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher, IMessageBroker messageBroker)
     {
         _commandDispatcher = commandDispatcher;
         _queryDispatcher = queryDispatcher;
+        _messageBroker = messageBroker;
+    }
+    [HttpGet("/test")]
+    public async Task<IActionResult> Test()
+    {
+        var modesOfTransportation = new List<ModsOfTransportation>
+        {
+            ModsOfTransportation.Airfreight
+        };
+        var address = "Los Angles";
+        var industry = "Vitamins";
+        var customerEvent = new CustomerCreated(new Guid("2adc0434-5f2c-4fd3-ac6e-9bd445855d0b"), modesOfTransportation, industry, address);
+        await _messageBroker.PublishAsync(customerEvent);
+        return Ok("Test");
     }
 
     [HttpGet("/customers/me")]
