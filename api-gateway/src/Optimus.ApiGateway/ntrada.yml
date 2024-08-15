@@ -133,7 +133,7 @@ modules:
     
     services:
       customers-service:
-        localUrl: localhost:5064
+        localUrl: localhost:5001
         url: customers-service
 
 
@@ -195,8 +195,48 @@ modules:
         auth: false
         responseHeaders:
           content-type: application/json
-    
+          
     services:
       identity-service:
-        localUrl: localhost:5271
+        localUrl: localhost:5002
         url: identity-service
+
+  chat:
+    path: chat
+    routes:
+      - upstream: /conversations
+        method: POST
+        use: downstream
+        downstream: /api/conversations
+        auth: true
+        responseHeaders:
+          content-type: application/json
+        claims:
+          role: user
+
+      - upstream: /conversations/{conversationId}/messages
+        method: POST
+        use: downstream
+        downstream: /api/conversations/{conversationId}/messages
+        bind:
+          - conversationId:{conversationId}
+        auth: true
+        responseHeaders:
+          content-type: application/json
+        claims:
+          role: user
+          
+      - upstream: /conversations
+        method: GET
+        use: downstream
+        downstream: /api/conversations
+        auth: true
+        responseHeaders:
+          content-type: application/json
+        claims:
+          role: user
+          
+    services:
+      chat-service:
+        localUrl: localhost:5003
+        url: chat
