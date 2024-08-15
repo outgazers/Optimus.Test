@@ -239,4 +239,4 @@ modules:
     services:
       chat-service:
         localUrl: localhost:5003
-        url: chat
+        url: chat 
