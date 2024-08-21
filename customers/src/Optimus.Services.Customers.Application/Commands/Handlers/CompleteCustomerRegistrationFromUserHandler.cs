@@ -46,7 +46,7 @@ public class CompleteCustomerRegistrationFromUserHandler : ICommandHandler<Compl
         await _customerRepository.UpdateAsync(customer);
 
         var events = _eventMapper.MapAll(customer.Events);
-        if(!events.Any())
+        if(events.Any())
             await _messageBroker.PublishAsync(events.ToArray());
     }
 }

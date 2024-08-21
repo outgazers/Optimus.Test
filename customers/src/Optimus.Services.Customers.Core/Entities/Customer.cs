@@ -107,6 +107,16 @@ public class Customer : AggregateRoot
             throw new InvalidCustomerAddressException(Id, address);
         }
 
+        if (string.IsNullOrWhiteSpace(industry))
+        {
+            throw new InvalidIndustryException(Id, industry);
+        }
+
+        if (!modsOfTransportation.Any())
+        {
+            throw new InvalidModsOfTransportation(Id);
+        }
+
         if (State != State.Incomplete)
         {
             throw new CannotChangeCustomerStateException(Id, State);
@@ -124,7 +134,6 @@ public class Customer : AggregateRoot
         Industry = industry;
         YearsInBusiness = yearsInBusiness;
         State = State.Valid;
-        State = State.AwaitForValidate;
         AddEvent(new CustomerRegistrationCompletedFromUser(this));
     }
 

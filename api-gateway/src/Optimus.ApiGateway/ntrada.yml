@@ -207,7 +207,7 @@ modules:
       - upstream: /conversations
         method: POST
         use: downstream
-        downstream: /api/conversations
+        downstream: chat/api/conversations
         auth: true
         responseHeaders:
           content-type: application/json
@@ -217,7 +217,7 @@ modules:
       - upstream: /conversations/{conversationId}/messages
         method: POST
         use: downstream
-        downstream: /api/conversations/{conversationId}/messages
+        downstream: chat/api/conversations/{conversationId}/messages
         bind:
           - conversationId:{conversationId}
         auth: true
@@ -229,7 +229,7 @@ modules:
       - upstream: /conversations
         method: GET
         use: downstream
-        downstream: /api/conversations
+        downstream: chat/api/conversations
         auth: true
         responseHeaders:
           content-type: application/json
