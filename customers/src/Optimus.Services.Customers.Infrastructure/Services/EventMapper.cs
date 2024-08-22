@@ -13,7 +13,7 @@ public class EventMapper : IEventMapper
     {
         switch (@event)
         {
-            case CustomerRegistrationCompleted e: return new Optimus.Services.Customers.Application.Events.CustomerCreated(e.Customer.Id);
+            case CustomerRegistrationCompletedFromUser e: return new Optimus.Services.Customers.Application.Events.CustomerCreated(e.Customer.Id, e.Customer.ModsOfTransportation, e.Customer.Industry, e.Customer.Address);
             case CustomerBecameVip e: return new Optimus.Services.Customers.Application.Events.CustomerBecameVip(e.Customer.Id);
             case CustomerStateChanged e:
                 return new Optimus.Services.Customers.Application.Events.CustomerStateChanged(e.Customer.Id,

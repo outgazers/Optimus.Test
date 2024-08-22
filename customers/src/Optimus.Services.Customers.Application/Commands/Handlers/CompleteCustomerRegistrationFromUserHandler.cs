@@ -40,11 +40,13 @@ public class CompleteCustomerRegistrationFromUserHandler : ICommandHandler<Compl
             throw new InvalidCustomerStateException(command.CustomerId);
         }
 
-        customer.CompleteRegistrationFromUser(command.FullName, command.Address, command.BirthDate, command.NationalCode);
+        customer.CompleteRegistrationFromUser(command.FullName, command.LocationStateAndCity, command.CompanyName,
+            command.MC, command.PhoneNumber, command.NetTerms, command.TMS, command.IsAssetBase,
+            command.ModsOfTransportation, command.Industry, command.YearsInBusiness);
         await _customerRepository.UpdateAsync(customer);
 
         var events = _eventMapper.MapAll(customer.Events);
-        if(!events.Any())
+        if(events.Any())
             await _messageBroker.PublishAsync(events.ToArray());
     }
 }

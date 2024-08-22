@@ -91,8 +91,8 @@ namespace Optimus.Services.Customers.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -106,14 +106,32 @@ namespace Optimus.Services.Customers.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<string>("Industry")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("IsAssetBase")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsVip")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("NationalCode")
+                    b.Property<string>("MC")
+                        .HasColumnType("text");
+
+                    b.Property<int[]>("ModsOfTransportation")
+                        .HasColumnType("integer[]");
+
+                    b.Property<string>("NetTerms")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
 
                     b.Property<int>("State")
                         .HasColumnType("integer");
+
+                    b.Property<string>("TMS")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -124,6 +142,9 @@ namespace Optimus.Services.Customers.Infrastructure.Migrations
 
                     b.Property<int>("Version")
                         .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("YearsInBusiness")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

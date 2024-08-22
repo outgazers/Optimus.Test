@@ -24,12 +24,10 @@ public class GetCustomerForUserHandler : IQueryHandler<GetCustomerForUser, Custo
             Id = customer.Id,
             Address = customer.Address,
             State = customer.State.ToString(),
-            BirthDate = customer.BirthDate,
             FullName = customer.FullName,
             IsVip = customer.IsVip,
             Email = customer.Email,
             Username = customer.Username,
-            NationalCode = customer.NationalCode,
         };
     }
 }

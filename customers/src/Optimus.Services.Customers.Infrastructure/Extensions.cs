@@ -103,7 +103,7 @@ public static class Extensions
             .SubscribeEvent<SignedUp>();
 
         RunMigration(app.ApplicationServices);
-        InitializeMockData(app.ApplicationServices);
+        //InitializeMockData(app.ApplicationServices);
 
 
         return app;
