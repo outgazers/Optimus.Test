@@ -30,7 +30,7 @@ public class CustomerController : ControllerBase
     {
         var modesOfTransportation = new List<ModsOfTransportation>
         {
-            ModsOfTransportation.Airfreight
+            ModsOfTransportation.FTL
         };
         var address = "Los Angles";
         var industry = "Vitamins";
