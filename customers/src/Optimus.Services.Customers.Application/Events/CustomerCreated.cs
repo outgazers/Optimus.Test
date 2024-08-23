@@ -7,11 +7,11 @@ namespace Optimus.Services.Customers.Application.Events;
 public class CustomerCreated : IEvent
 {
     public Guid CustomerId { get; }
-    public List<ModsOfTransportation> ModsOfTransportation { get; }
+    public List<ModesOfTransportation> ModsOfTransportation { get; }
     public string Industry { get; }
     public string Address { get; }
 
-    public CustomerCreated(Guid customerId, List<ModsOfTransportation> modsOfTransportation, string industry, string address)
+    public CustomerCreated(Guid customerId, List<ModesOfTransportation> modsOfTransportation, string industry, string address)
     {
         CustomerId = customerId;
         ModsOfTransportation = modsOfTransportation;

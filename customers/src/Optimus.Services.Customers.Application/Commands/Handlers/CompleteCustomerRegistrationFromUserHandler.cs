@@ -2,6 +2,7 @@ using Convey.CQRS.Commands;
 using Optimus.Services.Customers.Core.Entities;
 using Optimus.Services.Customers.Core.Exceptions;
 using Optimus.Services.Customers.Core.Repositories;
+using Optimus.Services.Customers.Core.ValueObjects;
 using Optimus.Services.Customers.Application.Exceptions;
 using Optimus.Services.Customers.Application.Services;
 
@@ -12,20 +13,18 @@ public class CompleteCustomerRegistrationFromUserHandler : ICommandHandler<Compl
     private readonly ICustomerRepository _customerRepository;
     private readonly IEventMapper _eventMapper;
     private readonly IMessageBroker _messageBroker;
-    private readonly IAppContext _appContext;
 
     public CompleteCustomerRegistrationFromUserHandler(ICustomerRepository customerRepository, IEventMapper eventMapper,
-        IMessageBroker messageBroker, IAppContext appContext)
+        IMessageBroker messageBroker, IFileManager fileManager)
     {
         _customerRepository = customerRepository;
         _eventMapper = eventMapper;
         _messageBroker = messageBroker;
-        _appContext = appContext;
     }
 
     public async Task HandleAsync(CompleteCustomerRegistrationFromUser command, CancellationToken cancellationToken = new CancellationToken())
     {
-        var customer = await _customerRepository.GetAsync(_appContext.Identity.Id);
+        var customer = await _customerRepository.GetAsync(command.CustomerId);
         if (customer is null)
         {
             throw new CustomerNotFoundException(command.CustomerId);
@@ -43,7 +42,7 @@ public class CompleteCustomerRegistrationFromUserHandler : ICommandHandler<Compl
 
         customer.CompleteRegistrationFromUser(command.FullName, command.LocationStateAndCity, command.CompanyName,
             command.MC, command.PhoneNumber, command.NetTerms, command.TMS, command.IsAssetBase,
-            command.ModsOfTransportation, command.Industry, command.YearsInBusiness);
+            command.ModesOfTransportation, command.Industry, command.YearsInBusiness);
         await _customerRepository.UpdateAsync(customer);
 
         var events = _eventMapper.MapAll(customer.Events);

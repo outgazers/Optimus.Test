@@ -16,7 +16,7 @@ public class Customer : AggregateRoot
     public string? NetTerms { get; set; } 
     public string? TMS { get; set; } 
     public bool? IsAssetBase { get; set; } 
-    public List<ModsOfTransportation>? ModsOfTransportation { get; set; }
+    public List<ModesOfTransportation>? ModesOfTransportation { get; set; }
     public string? Industry { get; set; }
     public int? YearsInBusiness { get; set; }
     public bool IsVip { get; private set; }
@@ -36,7 +36,7 @@ public class Customer : AggregateRoot
     public Customer(Guid id, string email, DateTime createdAt, DateTime updatedAt, string fullName,
         string address,
         bool isVip, State state, string username, string companyName, string? mc, string? phoneNumber, string? tMS,
-        string? netTerms, bool isAssetBase, List<ModsOfTransportation> modsOfTransportation, string? industry,
+        string? netTerms, bool isAssetBase, List<ModesOfTransportation> modesOfTransportation, string? industry,
         int yearsInBusiness)
     {
         Id = id;
@@ -52,7 +52,7 @@ public class Customer : AggregateRoot
         NetTerms = netTerms;
         TMS = tMS;
         IsAssetBase = isAssetBase;
-        ModsOfTransportation = modsOfTransportation;
+        ModesOfTransportation = modesOfTransportation;
         Industry = industry;
         YearsInBusiness = yearsInBusiness;
         IsVip = isVip;
@@ -61,7 +61,7 @@ public class Customer : AggregateRoot
 
     public void CompleteRegistration(string fullName, string address, string nationalCode,
         string companyName, string mc, string phoneNumber, string netTerms, string tMS, bool isAssetBase,
-        List<ModsOfTransportation> modsOfTransportation, string industry, int yearsInBusiness)
+        List<ModesOfTransportation> modsOfTransportation, string industry, int yearsInBusiness)
     {
         if (string.IsNullOrWhiteSpace(fullName))
         {
@@ -86,7 +86,7 @@ public class Customer : AggregateRoot
         NetTerms = netTerms;
         TMS = tMS;
         IsAssetBase = isAssetBase;
-        ModsOfTransportation = modsOfTransportation;
+        ModesOfTransportation = modsOfTransportation;
         Industry = industry;
         YearsInBusiness = yearsInBusiness;
         State = State.Valid;
@@ -95,7 +95,7 @@ public class Customer : AggregateRoot
 
     public void CompleteRegistrationFromUser(string fullName, string address,
         string companyName, string mc, string phoneNumber, string netTerms, string tMS, bool isAssetBase,
-        List<ModsOfTransportation> modsOfTransportation, string industry, int yearsInBusiness)
+        List<ModesOfTransportation> modsOfTransportation, string industry, int yearsInBusiness)
     {
         if (string.IsNullOrWhiteSpace(fullName))
         {
@@ -130,7 +130,7 @@ public class Customer : AggregateRoot
         NetTerms = netTerms;
         TMS = tMS;
         IsAssetBase = isAssetBase;
-        ModsOfTransportation = modsOfTransportation;
+        ModesOfTransportation = modsOfTransportation;
         Industry = industry;
         YearsInBusiness = yearsInBusiness;
         State = State.Valid;

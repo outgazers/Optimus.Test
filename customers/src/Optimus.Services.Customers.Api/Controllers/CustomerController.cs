@@ -28,9 +28,9 @@ public class CustomerController : ControllerBase
     [HttpGet("/test")]
     public async Task<IActionResult> Test()
     {
-        var modesOfTransportation = new List<ModsOfTransportation>
+        var modesOfTransportation = new List<ModesOfTransportation>
         {
-            ModsOfTransportation.FTL
+            ModesOfTransportation.FTL
         };
         var address = "Los Angles";
         var industry = "Vitamins";

@@ -1,6 +1,6 @@
 namespace Optimus.Services.Customers.Core.Entities;
 
-public enum ModsOfTransportation
+public enum ModesOfTransportation
 {
     AirFreight,
     Expedited,

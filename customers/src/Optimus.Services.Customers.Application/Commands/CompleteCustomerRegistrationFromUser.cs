@@ -15,7 +15,7 @@ public class CompleteCustomerRegistrationFromUser : ICommand
     public string NetTerms { get; set; } 
     public string TMS { get; set; } 
     public bool IsAssetBase { get; set; } 
-    public List<ModsOfTransportation> ModsOfTransportation { get; set; }
+    public List<ModesOfTransportation> ModesOfTransportation { get; set; }
     public string Industry { get; set; }
     public int YearsInBusiness { get; set; }
 }
