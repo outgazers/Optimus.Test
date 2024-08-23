@@ -2,7 +2,6 @@ using Convey.CQRS.Commands;
 using Optimus.Services.Customers.Core.Entities;
 using Optimus.Services.Customers.Core.Exceptions;
 using Optimus.Services.Customers.Core.Repositories;
-using Optimus.Services.Customers.Core.ValueObjects;
 using Optimus.Services.Customers.Application.Exceptions;
 using Optimus.Services.Customers.Application.Services;
 
@@ -13,18 +12,20 @@ public class CompleteCustomerRegistrationFromUserHandler : ICommandHandler<Compl
     private readonly ICustomerRepository _customerRepository;
     private readonly IEventMapper _eventMapper;
     private readonly IMessageBroker _messageBroker;
+    private readonly IAppContext _appContext;
 
     public CompleteCustomerRegistrationFromUserHandler(ICustomerRepository customerRepository, IEventMapper eventMapper,
-        IMessageBroker messageBroker, IFileManager fileManager)
+        IMessageBroker messageBroker, IAppContext appContext)
     {
         _customerRepository = customerRepository;
         _eventMapper = eventMapper;
         _messageBroker = messageBroker;
+        _appContext = appContext;
     }
 
     public async Task HandleAsync(CompleteCustomerRegistrationFromUser command, CancellationToken cancellationToken = new CancellationToken())
     {
-        var customer = await _customerRepository.GetAsync(command.CustomerId);
+        var customer = await _customerRepository.GetAsync(_appContext.Identity.Id);
         if (customer is null)
         {
             throw new CustomerNotFoundException(command.CustomerId);
