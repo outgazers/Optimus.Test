@@ -20,7 +20,7 @@ jobs:
       - name: build and push gateway azure container registry
         uses: docker/build-push-action@v2
         with:
-          context: ./api-gateway/Dockerfile
+          context: api-gateway/Dockerfile
           push: true
           tags: optimus.azurecr.io/optimus-back-api-gateway
 
@@ -28,7 +28,7 @@ jobs:
       - name: build and pushe identity azure container registry
         uses: docker/build-push-action@v2
         with:
-          context: ./identity
+          context: identity/Dockerfile
           push: true
           tags: optimus.azurecr.io/optimus-back-identity
 
@@ -36,7 +36,7 @@ jobs:
       - name: build and push customers azure container registry
         uses: docker/build-push-action@v2
         with:
-          context: ./customers/Dockerfile
+          context: customers/Dockerfile
           push: true
           tags: optimus.azurecr.io/optimus-back-customers
 
