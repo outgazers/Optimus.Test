@@ -62,13 +62,13 @@ jobs:
           # Change to the directory with your docker-compose.yml
                     
           # Stop running containers
-          sudo docker-compose -f services down
+          sudo docker-compose -f services.yml down
           
           # Pull the latest images
           sudo docker-compose pull
           
           # Start the containers with the updated images
-          sudo docker-compose up -d
+          sudo docker-compose -f services.yml up -d
 
 
 # jobs:
