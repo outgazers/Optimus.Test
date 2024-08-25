@@ -1,0 +1,88 @@
+name: push to registry and Deploy to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - main
+
+name: Build And Push to azure container registry
+on: push
+jobs:
+  build-container:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: Login to Azure Container Rregistry
+        uses: docker/login-action@v3
+        with:
+          registry: optimus.azurecr.io
+          username: ${{ secrets.AZURE_CLIENT_ID }}
+          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+
+      - name: build and push gateway azure container registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./api-gateway/Dockerfile
+          push: true
+          tags: optimus.azurecr.io/optimus-back-api-gateway
+
+
+      - name: build and pushe identity azure container registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./identity
+          push: true
+          tags: optimus.azurecr.io/optimus-back-identity
+
+
+      - name: build and push customers azure container registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./customers/Dockerfile
+          push: true
+          tags: optimus.azurecr.io/optimus-back-customers
+
+
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Login to Azure Container Registry
+#         uses: azure/login@v1
+#         with:
+#           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+#       - name: Pull image from Azure Container Registry
+#         run: |
+#           az acr login --name ${{ secrets.REGISTRY_LOGIN_SERVER }}
+#           docker pull ${{ secrets.REGISTRY_LOGIN_SERVER }}/<image-name>:<tag>
+
+#       - name: SSH into Ubuntu server
+#         uses: appleboy/ssh-action@v1
+#         with:
+#           host: ${{ secrets.SSH_HOST }}
+#           username: ${{ secrets.SSH_USER }}
+#           key: ${{ secrets.SSH_PRIVATE_KEY }}
+#           script: |
+#             # Update Docker Compose configuration with the new image
+#             echo "Updating Docker Compose configuration..."
+#             sed -i "s/<old-image-name>:<old-tag>/<new-image-name>:<new-tag>/g" /path/to/docker-compose.yml
+
+#             # Pull the new image
+#             echo "Pulling new image..."
+#             docker pull ${{ secrets.REGISTRY_LOGIN_SERVER }}/<image-name>:<tag>
+
+#             # Stop and remove existing containers
+#             echo "Stopping and removing existing containers..."
+#             docker-compose -f /path/to/docker-compose.yml down
+
+#             # Start new containers
+#             echo "Starting new containers..."
+#             docker-compose -f /path/to/docker-compose.yml up -d
