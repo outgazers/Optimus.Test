@@ -13,31 +13,33 @@ public class CompleteCustomerRegistrationFromUserHandler : ICommandHandler<Compl
     private readonly ICustomerRepository _customerRepository;
     private readonly IEventMapper _eventMapper;
     private readonly IMessageBroker _messageBroker;
+    private readonly IAppContext _appContext;
 
     public CompleteCustomerRegistrationFromUserHandler(ICustomerRepository customerRepository, IEventMapper eventMapper,
-        IMessageBroker messageBroker, IFileManager fileManager)
+        IMessageBroker messageBroker, IFileManager fileManager, IAppContext appContext)
     {
         _customerRepository = customerRepository;
         _eventMapper = eventMapper;
         _messageBroker = messageBroker;
+        _appContext = appContext;
     }
 
     public async Task HandleAsync(CompleteCustomerRegistrationFromUser command, CancellationToken cancellationToken = new CancellationToken())
     {
-        var customer = await _customerRepository.GetAsync(command.CustomerId);
+        var customer = await _customerRepository.GetAsync(_appContext.Identity.Id);
         if (customer is null)
         {
-            throw new CustomerNotFoundException(command.CustomerId);
+            throw new CustomerNotFoundException(_appContext.Identity.Id);
         }
         
         if (customer.State is State.Valid)
         {
-            throw new CustomerAlreadyRegisteredException(command.CustomerId);
+            throw new CustomerAlreadyRegisteredException(_appContext.Identity.Id);
         }
 
         if (customer.State is State.AwaitForValidate)
         {
-            throw new InvalidCustomerStateException(command.CustomerId);
+            throw new InvalidCustomerStateException(_appContext.Identity.Id);
         }
 
         customer.CompleteRegistrationFromUser(command.FullName, command.LocationStateAndCity, command.CompanyName,
