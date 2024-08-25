@@ -1,12 +1,7 @@
 name: push to registry and Deploy to Ubuntu Server
 
-on:
-  push:
-    branches:
-      - main
-
-name: Build And Push to azure container registry
 on: push
+
 jobs:
   build-container:
     name: Build Docker Image
