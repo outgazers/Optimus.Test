@@ -3,7 +3,7 @@ name: push to registry and Deploy to Ubuntu Server
 on: push
 
 jobs:
-  build-container:
+  build-and-push:
     name: Build Docker Image
     runs-on: ubuntu-latest
     steps:
@@ -45,6 +45,30 @@ jobs:
           push: true
           tags: optimus.azurecr.io/optimus-back-customers
 
+  deploy:
+    name: Deploy to Ubuntu Server
+    runs-on: self-hosted  # Change this to use your self-hosted runner
+    needs: build-and-push
+    steps:
+      - name: Deploy Docker Compose on Ubuntu Server
+        env:
+          ACR_NAME: optimus.azurecr.io
+          USERNAME: ${{ secrets.AZURE_CLIENT_ID }}
+          PASSWORD: ${{ secrets.AZURE_CLIENT_SECRET }}
+        run: |
+          # Login to ACR
+          echo $PASSWORD | sudo docker login $ACR_NAME -u $USERNAME --password-stdin
+          pwd
+          # Change to the directory with your docker-compose.yml
+                    
+          # Stop running containers
+          sudo docker-compose -f services down
+          
+          # Pull the latest images
+          sudo docker-compose pull
+          
+          # Start the containers with the updated images
+          sudo docker-compose up -d
 
 
 # jobs:
