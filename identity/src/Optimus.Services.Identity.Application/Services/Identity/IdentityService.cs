@@ -144,7 +144,7 @@ public class IdentityService : IIdentityService
         
         var hashedPassword = _passwordService.Hash(password);
         
-        var crmAccountId = await _crmService.AddUserAsync(email, password, password);
+        var crmAccountId = await _crmService.AddUserAsync(email, username, password);
         if(crmAccountId is 0)
             throw new TimeoutException();
 
