@@ -14,4 +14,5 @@ public class User : AggregateRoot
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public IEnumerable<string> Permissions { get; set; }
+    public int CrmAccountId { get; set; }
 }

@@ -20,7 +20,7 @@ public class IdentityDbContext : DbContext
     }
     
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
-    //     => optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=Identity;User id=kanaka;Password=kanakaexchange@123");
+    //     => optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=Identity;User id=;Password=");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

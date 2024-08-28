@@ -21,6 +21,7 @@ public class Customer : AggregateRoot
     public int? YearsInBusiness { get; set; }
     public bool IsVip { get; private set; }
     public State State { get; private set; }
+    public int CrmAccountId { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
 
@@ -28,8 +29,8 @@ public class Customer : AggregateRoot
     {
     }
 
-    public Customer(Guid id, string email, DateTime createdAt, DateTime updatedAt, string username) : this(id, email,
-        createdAt, updatedAt, null, null, false, State.Incomplete, username, null, null, null, null, null, false, null, null, 0)
+    public Customer(Guid id, string email, DateTime createdAt, DateTime updatedAt, string username, int crmAccountId) : this(id, email,
+        createdAt, updatedAt, null, null, false, State.Incomplete, username, null, null, null, null, null, false, null, null, 0, crmAccountId)
     {
     }
 
@@ -37,7 +38,7 @@ public class Customer : AggregateRoot
         string address,
         bool isVip, State state, string username, string companyName, string? mc, string? phoneNumber, string? tMS,
         string? netTerms, bool isAssetBase, List<ModesOfTransportation> modesOfTransportation, string? industry,
-        int yearsInBusiness)
+        int yearsInBusiness, int crmAccountId)
     {
         Id = id;
         Email = email;
@@ -57,6 +58,7 @@ public class Customer : AggregateRoot
         YearsInBusiness = yearsInBusiness;
         IsVip = isVip;
         State = state;
+        CrmAccountId = crmAccountId;
     }
 
     public void CompleteRegistration(string fullName, string address, string nationalCode,

@@ -133,7 +133,7 @@ modules:
     
     services:
       customers-service:
-        localUrl: localhost:5001
+        localUrl: localhost:5002
         url: customers-service
 
 
@@ -195,10 +195,21 @@ modules:
         auth: false
         responseHeaders:
           content-type: application/json
+
+      - upstream: /get-crm-login-url
+        method: GET
+        use: downstream
+        downstream: identity-service/get-crm-login-url
+        auth: true
+        responseHeaders:
+          content-type: application/json
+        claims:
+          role: user
+          
           
     services:
       identity-service:
-        localUrl: localhost:5002
+        localUrl: localhost:5001
         url: identity-service
 
   chat:
@@ -237,6 +248,6 @@ modules:
           role: user
           
     services:
-      chat-service:
-        localUrl: localhost:5003
+      chat:
+        localUrl: localhost:8001
         url: chat 

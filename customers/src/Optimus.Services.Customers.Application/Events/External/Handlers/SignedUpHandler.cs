@@ -35,7 +35,7 @@ public class SignedUpHandler : IEventHandler<SignedUp>
             throw new CustomerAlreadyCreatedException(customer.Id);
         }
 
-        customer = new Customer(@event.UserId, @event.Email, _dateTimeProvider.Now, _dateTimeProvider.Now, @event.Username);
+        customer = new Customer(@event.UserId, @event.Email, _dateTimeProvider.Now, _dateTimeProvider.Now, @event.Username, @event.CrmAccountId);
         await _customerRepository.AddAsync(customer);
     }
 }

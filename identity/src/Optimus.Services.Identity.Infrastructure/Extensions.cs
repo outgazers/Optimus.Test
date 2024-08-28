@@ -60,6 +60,7 @@ public static class Extensions
             .AddTransient<IMessageBroker, MessageBroker>()
             .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
             .AddScoped<IUserRepository, UserRepository>()
+            .AddScoped<ICrmService, CrmService>()
             .AddTransient<IAppContextFactory, AppContextFactory>()
             .AddTransient(ctx => ctx.GetRequiredService<IAppContextFactory>().Create())
             .AddPostgres<IdentityDbContext>()

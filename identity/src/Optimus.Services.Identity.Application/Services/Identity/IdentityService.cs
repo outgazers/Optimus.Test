@@ -32,10 +32,11 @@ public class IdentityService : IIdentityService
     private readonly IMessageBroker _messageBroker;
     private readonly ILogger<IdentityService> _logger;
     private readonly IEmailService _emailService;
+    private readonly ICrmService _crmService;
 
     public IdentityService(IUserRepository userRepository, IPasswordService passwordService,
         IJwtProvider jwtProvider, IRefreshTokenService refreshTokenService,
-        IMessageBroker messageBroker, ILogger<IdentityService> logger, IEmailService emailService)
+        IMessageBroker messageBroker, ILogger<IdentityService> logger, IEmailService emailService, ICrmService crmService)
     {
         _userRepository = userRepository;
         _passwordService = passwordService;
@@ -44,6 +45,7 @@ public class IdentityService : IIdentityService
         _messageBroker = messageBroker;
         _logger = logger;
         _emailService = emailService;
+        _crmService = crmService;
     }
 
     public async Task<UserDto> GetAsync(Guid id)
@@ -141,6 +143,10 @@ public class IdentityService : IIdentityService
         }
         
         var hashedPassword = _passwordService.Hash(password);
+        
+        var crmAccountId = await _crmService.AddUserAsync(email, password, password);
+        if(crmAccountId is 0)
+            throw new TimeoutException();
 
         user = new User
         {
@@ -156,12 +162,13 @@ public class IdentityService : IIdentityService
             SentVerificationCount = user?.SentVerificationCount is null ? 1 : user.SentVerificationCount++,
             CreatedAt = DateTime.Now.ToUniversalTime(),
             UpdatedAt = DateTime.Now.ToUniversalTime(),
-            SentVerificationCodeAt = DateTime.Now.ToUniversalTime()
+            SentVerificationCodeAt = DateTime.Now.ToUniversalTime(),
+            CrmAccountId = crmAccountId
         };
         
         await _userRepository.AddAsync(user);
         
-        await _messageBroker.PublishAsync(new SignedUp(user.Id, user.Email, user.Username, user.Role));
+        await _messageBroker.PublishAsync(new SignedUp(user.Id, user.Email, user.Username, user.Role, crmAccountId));
         _logger.LogInformation($"Created an account for the user with id: {user.Id}.");
         return user.SignUpState;
     }

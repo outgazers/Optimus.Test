@@ -4,6 +4,7 @@ using Optimus.Services.Identity.Application.DTO;
 using Optimus.Services.Identity.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Optimus.Services.Identity.Api.Models.Requests;
+using Optimus.Services.Identity.Application;
 using Optimus.Services.Identity.Core.Entities;
 
 namespace Optimus.Services.Identity.Api.Controllers;
@@ -14,13 +15,17 @@ public class AuthController : ControllerBase
     private readonly IIdentityService _identityService;
     private readonly IAccessTokenService _accessTokenService;
     private readonly IRefreshTokenService _refreshTokenService;
+    private readonly ICrmService _crmService;
+    private readonly IAppContext _appContext;
 
     public AuthController(IIdentityService identityService, IAccessTokenService accessTokenService,
-        IRefreshTokenService refreshTokenService)
+        IRefreshTokenService refreshTokenService, ICrmService crmService, IAppContext appContext)
     {
         _identityService = identityService;
         _accessTokenService = accessTokenService;
         _refreshTokenService = refreshTokenService;
+        _crmService = crmService;
+        _appContext = appContext;
     }
 
     [HttpPost("/sign-in")]
@@ -87,5 +92,13 @@ public class AuthController : ControllerBase
         var authDto = await _identityService.UpdatePasswordAsync(req.Email, req.Password, req.VerificationCode);
 
         return Ok(authDto);
+    }
+    
+    [HttpGet("/get-crm-login-url")]
+    public async Task<ActionResult<string>> GetLoginUrl()
+    {
+        var user = await _identityService.GetAsync(_appContext.Identity.Id);
+        var loginUrl = await _crmService.GetLoginUrlAsync(user.Email);
+        return Ok(loginUrl);
     }
 }
