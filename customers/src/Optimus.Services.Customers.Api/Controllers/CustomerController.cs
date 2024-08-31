@@ -48,7 +48,8 @@ public class CustomerController : ControllerBase
             DateTime.UtcNow,
             DateTime.UtcNow,
             "optimusUser",
-            1
+            1,
+            "token"
         );
         
         customer.CompleteRegistrationFromUser(

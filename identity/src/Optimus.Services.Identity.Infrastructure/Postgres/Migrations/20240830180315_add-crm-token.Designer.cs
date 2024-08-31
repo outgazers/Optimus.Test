@@ -2,23 +2,25 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Optimus.Services.Customers.Infrastructure.Postgres;
+using Optimus.Services.Identity.Infrastructure.Postgres;
 
 #nullable disable
 
-namespace Optimus.Services.Customers.Infrastructure.Migrations
+namespace Optimus.Services.Identity.Infrastructure.Migrations
 {
-    [DbContext(typeof(CustomersDbContext))]
-    partial class CustomersDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(IdentityDbContext))]
+    [Migration("20240830180315_add-crm-token")]
+    partial class addcrmtoken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("customers")
-                .HasAnnotation("ProductVersion", "6.0.5")
+                .HasDefaultSchema("identities")
+                .HasAnnotation("ProductVersion", "6.0.31")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -33,7 +35,7 @@ namespace Optimus.Services.Customers.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Inbox", "customers");
+                    b.ToTable("Inbox", "identities");
                 });
 
             modelBuilder.Entity("Convey.MessageBrokers.Outbox.Messages.OutboxMessage", b =>
@@ -79,20 +81,43 @@ namespace Optimus.Services.Customers.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Outbox", "customers");
+                    b.ToTable("Outbox", "identities");
                 });
 
-            modelBuilder.Entity("Optimus.Services.Customers.Core.Entities.Customer", b =>
+            modelBuilder.Entity("Optimus.Services.Identity.Core.Entities.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Address")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("CompanyName")
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Token")
+                        .IsUnique();
+
+                    b.ToTable("RefreshTokens", "identities");
+                });
+
+            modelBuilder.Entity("Optimus.Services.Identity.Core.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -109,49 +134,46 @@ namespace Optimus.Services.Customers.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("FullName")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("Industry")
-                        .HasColumnType("text");
-
-                    b.Property<bool?>("IsAssetBase")
+                    b.Property<bool>("IsVerified")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsVip")
-                        .HasColumnType("boolean");
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<string>("MC")
+                    b.Property<string>("Permissions")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int[]>("ModesOfTransportation")
-                        .HasColumnType("integer[]");
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<string>("NetTerms")
-                        .HasColumnType("text");
+                    b.Property<DateTime?>("SentVerificationCodeAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<int>("State")
+                    b.Property<int?>("SentVerificationCount")
                         .HasColumnType("integer");
 
-                    b.Property<string>("TMS")
-                        .HasColumnType("text");
+                    b.Property<int>("SignUpState")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Username")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("VerificationCode")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("Version")
                         .IsConcurrencyToken()
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("YearsInBusiness")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -162,7 +184,16 @@ namespace Optimus.Services.Customers.Infrastructure.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Customers", "customers");
+                    b.ToTable("Users", "identities");
+                });
+
+            modelBuilder.Entity("Optimus.Services.Identity.Core.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Optimus.Services.Identity.Core.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

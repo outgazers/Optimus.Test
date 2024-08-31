@@ -144,9 +144,49 @@ public class IdentityService : IIdentityService
         
         var hashedPassword = _passwordService.Hash(password);
         
-        var crmAccountId = await _crmService.AddUserAsync(email, username, password);
-        if(crmAccountId is 0)
-            throw new TimeoutException();
+        
+        var crmAccountId = 0;
+        const int maxAttempts = 5;
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            try
+            {
+                crmAccountId = await _crmService.AddUserAsync(email, username, password);
+                if (crmAccountId != 0)
+                {
+                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Attempt {attempt} failed: {ex.Message}");
+                if (attempt == maxAttempts)
+                {
+                    throw new TimeoutException("Failed to add user after multiple attempts.", ex);
+                }
+            }
+        }
+
+        var crmToken = "";
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            try
+            {
+                crmToken = await _crmService.AuthenticateAsync(email, password);
+                if (!crmToken.IsNullOrEmpty())
+                {
+                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Attempt {attempt} failed: {ex.Message}");
+                if (attempt == maxAttempts)
+                {
+                    throw new TimeoutException("Failed to add user after multiple attempts.", ex);
+                }
+            }
+        }
 
         user = new User
         {
@@ -163,12 +203,13 @@ public class IdentityService : IIdentityService
             CreatedAt = DateTime.Now.ToUniversalTime(),
             UpdatedAt = DateTime.Now.ToUniversalTime(),
             SentVerificationCodeAt = DateTime.Now.ToUniversalTime(),
-            CrmAccountId = crmAccountId
+            CrmAccountId = crmAccountId,
+            CrmToken = crmToken
         };
         
         await _userRepository.AddAsync(user);
         
-        await _messageBroker.PublishAsync(new SignedUp(user.Id, user.Email, user.Username, user.Role, crmAccountId));
+        await _messageBroker.PublishAsync(new SignedUp(user.Id, user.Email, user.Username, user.Role, crmAccountId, crmToken));
         _logger.LogInformation($"Created an account for the user with id: {user.Id}.");
         return user.SignUpState;
     }

@@ -123,6 +123,10 @@ namespace Optimus.Services.Identity.Infrastructure.Migrations
                     b.Property<int>("CrmAccountId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("CrmToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)

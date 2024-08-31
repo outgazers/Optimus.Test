@@ -27,6 +27,15 @@ services:
       - 5002:80
     networks:
       - optimus
+  
+  worker-service:
+    image: worker
+    container_name: worker-service
+    restart: unless-stopped
+    ports:
+      - 5003:80
+    networks:
+      - optimus
 
 networks:
   optimus:

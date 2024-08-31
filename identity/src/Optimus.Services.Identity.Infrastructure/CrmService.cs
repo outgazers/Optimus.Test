@@ -6,9 +6,9 @@ namespace Optimus.Services.Identity.Infrastructure;
 public class CrmService : ICrmService
 {
     private readonly HttpClient _httpClient;
-    private readonly string _apiUrl = "https://api.stgi.net/api-xml";
-    private readonly string _email = "ramtin@optimusgo.ai";
-    private readonly string _authToken = "08dfa496058a15525dd01873a217892e9e0baacc6e3c1a8df6d4134c5054980c";
+    private const string ApiUrl = "https://api.stgi.net/api-xml";
+    private const string Email = "ramtin@optimusgo.ai";
+    private const string AuthToken = "08dfa496058a15525dd01873a217892e9e0baacc6e3c1a8df6d4134c5054980c";
 
     public CrmService(HttpClient httpClient)
     {
@@ -19,12 +19,12 @@ public class CrmService : ICrmService
     {
         var requestContent = new FormUrlEncodedContent(new[]
         {
-            new KeyValuePair<string, string>("email", _email),
-            new KeyValuePair<string, string>("auth_token", _authToken),
+            new KeyValuePair<string, string>("email", Email),
+            new KeyValuePair<string, string>("auth_token", AuthToken),
             new KeyValuePair<string, string>("xml", $"<CreateAccountRequest><Name>{username}</Name><Email>{email}</Email><Password>{password}</Password></CreateAccountRequest>")
         });
 
-        var response = await _httpClient.PostAsync(_apiUrl, requestContent);
+        var response = await _httpClient.PostAsync(ApiUrl, requestContent);
         response.EnsureSuccessStatusCode();
 
         var responseContent = await response.Content.ReadAsStringAsync();
@@ -44,12 +44,12 @@ public class CrmService : ICrmService
     {
         var requestContent = new FormUrlEncodedContent(new[]
         {
-            new KeyValuePair<string, string>("email", _email),
-            new KeyValuePair<string, string>("auth_token", _authToken),
+            new KeyValuePair<string, string>("email", Email),
+            new KeyValuePair<string, string>("auth_token", AuthToken),
             new KeyValuePair<string, string>("xml", $"<GetLoginLinkRequest email=\"{email}\"/>")
         });
 
-        var response = await _httpClient.PostAsync(_apiUrl, requestContent);
+        var response = await _httpClient.PostAsync(ApiUrl, requestContent);
         response.EnsureSuccessStatusCode();
 
         var responseContent = await response.Content.ReadAsStringAsync();
@@ -63,5 +63,43 @@ public class CrmService : ICrmService
         }
 
         throw new Exception("Failed to get login URL from response.");
+    }
+
+    public async Task AddGroupAsync(string accountId, string groupName)
+    {
+        var requestContent = new FormUrlEncodedContent(new[]
+        {
+            new KeyValuePair<string, string>("email", Email),
+            new KeyValuePair<string, string>("auth_token", AuthToken),
+            new KeyValuePair<string, string>("xml", $"<CreateGroupRequest account_id=\"{accountId}\"><Name>\"{groupName}\"/Name><GroupType>Private</GroupType></CreateGroupRequest>")
+        });
+
+        var response = await _httpClient.PostAsync(ApiUrl, requestContent);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<string> AuthenticateAsync(string email, string password)
+    {
+        var requestContent = new FormUrlEncodedContent(new[]
+        {
+            new KeyValuePair<string, string>("email", email),
+            new KeyValuePair<string, string>("password", password),
+            new KeyValuePair<string, string>("xml", "<GetAuthTokenRequest></GetAuthTokenRequest>")
+        });
+
+        var response = await _httpClient.PostAsync(ApiUrl, requestContent);
+        response.EnsureSuccessStatusCode();
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(responseContent);
+
+        var tokenNode = xmlDoc.SelectSingleNode("/GetAuthTokenResponse/Token");
+        if (tokenNode != null)
+        {
+            return tokenNode.InnerText;
+        }
+
+        throw new Exception("Failed to authenticate or parse token from response.");
     }
 }

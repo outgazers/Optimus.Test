@@ -10,13 +10,15 @@ public class SignedUp : IEvent
     public string Email { get; }
     public string Role { get; }
     public int CrmAccountId { get; }
+    public string CrmToken { get; }
     
-    public SignedUp(Guid userId, string email, string username, string role, int crmAccountId)
+    public SignedUp(Guid userId, string email, string username, string role, int crmAccountId, string crmToken)
     {
         UserId = userId;
         Username = username;
         Email = email;
         Role = role;
         CrmAccountId = crmAccountId;
+        CrmToken = crmToken;
     }
 }

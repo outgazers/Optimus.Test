@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optimus.Services.Worker", "src\Optimus.Services.Worker\Optimus.Services.Worker.csproj", "{15F255C5-1F3C-44BA-86B0-61F6C5CC9154}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C5422A7D-EE99-4C38-B5EA-A0DB4B947716}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{15F255C5-1F3C-44BA-86B0-61F6C5CC9154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15F255C5-1F3C-44BA-86B0-61F6C5CC9154}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15F255C5-1F3C-44BA-86B0-61F6C5CC9154}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15F255C5-1F3C-44BA-86B0-61F6C5CC9154}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{15F255C5-1F3C-44BA-86B0-61F6C5CC9154} = {C5422A7D-EE99-4C38-B5EA-A0DB4B947716}
+	EndGlobalSection
+EndGlobal

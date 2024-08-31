@@ -13,7 +13,9 @@ public class EventMapper : IEventMapper
     {
         switch (@event)
         {
-            case CustomerRegistrationCompletedFromUser e: return new Optimus.Services.Customers.Application.Events.CustomerCreated(e.Customer.Id, e.Customer.CrmAccountId, e.Customer.ModesOfTransportation, e.Customer.Industry, e.Customer.Address);
+            case CustomerRegistrationCompletedFromUser e: return new Application.Events.CustomerCreated(e.Customer.Id,
+                e.Customer.CrmAccountId, e.Customer.ModesOfTransportation, e.Customer.Industry, e.Customer.Address,
+                e.Customer.CrmToken, e.Customer.Email);
             case CustomerBecameVip e: return new Optimus.Services.Customers.Application.Events.CustomerBecameVip(e.Customer.Id);
             case CustomerStateChanged e:
                 return new Optimus.Services.Customers.Application.Events.CustomerStateChanged(e.Customer.Id,
