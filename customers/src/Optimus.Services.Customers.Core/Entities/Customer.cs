@@ -98,7 +98,7 @@ public class Customer : AggregateRoot
     }
 
     public void CompleteRegistrationFromUser(string fullName, string address,
-        string companyName, string mc, string phoneNumber, string netTerms, string tMS, bool isAssetBase,
+        string companyName, string? mc, string phoneNumber, string? netTerms, string? tMS, bool isAssetBase,
         List<ModesOfTransportation> modsOfTransportation, string industry, int yearsInBusiness)
     {
         if (string.IsNullOrWhiteSpace(fullName))
