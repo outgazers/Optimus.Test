@@ -68,8 +68,8 @@ public class CustomerController : ControllerBase
         var e = _eventMapper.MapAll(customer.Events);
         if(e.Any())
             await _messageBroker.PublishAsync(e.ToArray());
-        // var customerEvent = new CustomerCreated(new Guid("2adc0434-5f2c-4fd3-ac6e-9bd445855d0b"), modesOfTransportation, industry, address);
-        // await _messageBroker.PublishAsync(customerEvent);
+        var customerEvent = new CustomerCreated(customer.Id,customer.CrmAccountId, modesOfTransportation, industry, address, customer.CrmToken, customer.Email);
+        await _messageBroker.PublishAsync(customerEvent);
         return Ok("Test");
     }
 
