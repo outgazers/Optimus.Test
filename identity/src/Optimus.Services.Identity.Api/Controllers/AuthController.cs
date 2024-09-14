@@ -31,7 +31,8 @@ public class AuthController : ControllerBase
     [HttpPost("/sign-in")]
     public async Task<ActionResult<AuthDto>> SignIn([FromBody] SignIn req)
     {
-        var token = await _identityService.SignInAsync(req);
+        var token = await _identityService.SignInAsync(new SignIn(req.Password.Trim().ToLower(),
+            req.Email.Trim().ToLower()));
         
         return Ok(token);
     }
@@ -62,8 +63,8 @@ public class AuthController : ControllerBase
     [HttpPost("/sign-up")]
     public async Task<ActionResult<SignUpState>> SignUp([FromBody] SignUpRequest signUpRequest)
     {
-        var state = await _identityService.SignUpAsync(signUpRequest.Email, signUpRequest.Username,
-            signUpRequest.Password, true);
+        var state = await _identityService.SignUpAsync(signUpRequest.Email.Trim().ToLower(), signUpRequest.Username.Trim().ToLower(),
+            signUpRequest.Password.Trim().ToLower(), true);
 
         if (state == null)
             return BadRequest("Something bad happened , please wait");
@@ -89,7 +90,8 @@ public class AuthController : ControllerBase
     [HttpPost("/update-password")]
     public async Task<ActionResult<AuthDto>> UpdatePassword([FromBody] UpdatePasswordRequest req)
     {
-        var authDto = await _identityService.UpdatePasswordAsync(req.Email, req.Password, req.VerificationCode);
+        var authDto = await _identityService.UpdatePasswordAsync(req.Email.Trim().ToLower(),
+            req.Password.Trim().ToLower(), req.VerificationCode);
 
         return Ok(authDto);
     }
