@@ -29,7 +29,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("/sign-in")]
-    public async Task<ActionResult<AuthDto>> SignIn([FromBody] SignIn req)
+    public async Task<ActionResult<AuthDto>> SignIn([FromBody] SignIn req) 
     {
         var token = await _identityService.SignInAsync(new SignIn(req.Password.Trim().ToLower(),
             req.Email.Trim().ToLower()));
